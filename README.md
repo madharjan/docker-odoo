@@ -53,9 +53,8 @@ docker stop odoo-postgresql
 docker rm odoo-postgresql
 
 docker run -d -t \
-  -e POSTGRESQL_DB_NAME=odoo \
-  -e POSTGRESQL_DB_USERNAME=odoo \
-  -e POSTGRESQL_DB_PASSWORD=Pa55w0rd \
+  -e POSTGRESQL_USERNAME=odoo \
+  -e POSTGRESQL_PASSWORD=Pa55w0rd \
   -p 5432:5432 \
   -v /opt/docker/odoo/postgresql/etc:/etc/postgresql/9.3/main \
   -v /opt/docker/odoo/postgresql/lib:/var/lib/postgresql/9.3/main \
@@ -66,14 +65,32 @@ docker run -d -t \
 
 ### Odoo Server
 
+**Run `docker-odoo`**
+```
+docker run -d -t \
+  --name odoo \
+  madharjan/docker-odoo:9.0
+```
+
 **Prepare folder on host for container volumes**
 ```
 sudo mkdir -p /opt/docker/odoo/etc/
 sudo mkdir -p /opt/docker/odoo/addons/
+sudo mkdir -p /opt/docker/odoo/lib/
 sudo mkdir -p /opt/docker/odoo/log/
 ```
 
-**Run `docker-odoo`**
+**Copy default configuration to host**
+```
+sudo docker cp odoo:/etc/odoo/odoo-server.conf /opt/docker/odoo/etc/
+```
+
+**Update configuration as necessary**
+```
+sudo vi /opt/docker/odoo/etc/odoo-server.conf
+```
+
+**Run `docker-odoo` with update configuration**
 ```
 docker stop odoo
 docker rm odoo
@@ -82,7 +99,8 @@ docker run -d -t \
   --link odoo-postgresql:postgresql \
   -p 8069:8069 \
   -v /opt/docker/odoo/etc:/etc/odoo \
-  -v /opt/docker/odoo/addons:/opt/odoo/addons \
+  -v /opt/docker/odoo/addons:/opt/odoo/extra \
+  -v /opt/docker/odoo/lib:/var/lib/odoo \  
   -v /opt/docker/odoo/log:/var/log/odoo \
   --name odoo \
   madharjan/docker-odoo:9.0

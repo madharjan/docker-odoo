@@ -61,6 +61,13 @@ rm -rf wkhtmltox-0.12.1_linux-trusty-amd64.deb
 ln -s /usr/local/bin/wkhtmltopdf /usr/bin
 ln -s /usr/local/bin/wkhtmltoimage /usr/bin
 
+ln -s /usr/local/bin/lessc /usr/bin/lessc
+ln -s /usr/bin/nodejs /usr/bin/node
+
+mkdir -p /etc/odoo
+mkdir -p /opt/odoo/extra
+mkdir -p /var/log/odoo
+
 mkdir -p /etc/service/odoo
 cp ${ODOO_BUILD_PATH}/odoo.runit /etc/service/odoo/run
 chmod 750 /etc/service/odoo/run

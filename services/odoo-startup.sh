@@ -6,16 +6,8 @@ if [ "${DEBUG}" == true ]; then
   set -x
 fi
 
-mkdir -p /etc/odoo
-mkdir -p /opt/odoo/addons
-mkdir -p /var/log/odoo
-
-cp /opt/odoo/debian/openerp-server.conf /etc/odoo/odoo-server.conf
-sed -e "s/addons_path = .*/addons_path = \/opt\/odoo\/addons/g" -i /etc/odoo/odoo-server.conf
-sed -e "s/logfile = .*/logfile =  \/var\/log\/odoo\/odoo-server.log/g" -i /etc/odoo/odoo-server.conf
-
 POSTGRESQL_HOST=${POSTGRESQL_HOST:-${POSTGRESQL_PORT_5432_TCP_ADDR}}
-if ![ ${POSTGRESQL_PORT} =~ ^[-0-9]+$ ]; then
+if ! [ ${POSTGRESQL_PORT} =~ ^[-0-9]+$ ]; then
   POSTGRESQL_PORT=${POSTGRESQL_PORT_5432_TCP_PORT}
 fi
 

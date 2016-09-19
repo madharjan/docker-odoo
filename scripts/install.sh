@@ -14,6 +14,8 @@ apt-get update
 ## Install Odoo Server and runit service
 /build/services/odoo/odoo.sh
 
+cp ${ODOO_CONFIG_PATH}/odoo-server.conf /etc/odoo/odoo-server.conf
+
 mkdir -p /etc/my_init.d
 cp /build/services/odoo-startup.sh /etc/my_init.d
 chmod 750 /etc/my_init.d/odoo-startup.sh

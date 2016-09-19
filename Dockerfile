@@ -15,7 +15,7 @@ COPY . /build
 
 RUN /build/scripts/install.sh && /build/scripts/cleanup.sh
 
-VOLUME ["/etc/odoo", "/opt/odoo/addons", "/var/log/odoo"]
+VOLUME ["/etc/odoo", "/var/lib/odoo", "/opt/odoo/extra", "/var/log/odoo"]
 
 CMD ["/sbin/my_init"]
 
