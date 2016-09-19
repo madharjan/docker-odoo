@@ -1,0 +1,5 @@
+#!/bin/sh
+
+set -e
+
+exec /sbin/setuser odoo /opt/odoo/openerp-server -c /etc/odoo-server.conf
