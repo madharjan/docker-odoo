@@ -61,7 +61,7 @@ docker run -d -t \
   -v /opt/docker/odoo/postgresql/lib:/var/lib/postgresql/9.3/main \
   -v /opt/docker/odoo/postgresql/log:/var/log/postgresql \
   --name odoo-postgresql \
-  madharjan/docker-postgresql:9.3 /sbin/my_init
+  madharjan/docker-postgresql:9.3
 ```
 
 ### Odoo Server
@@ -69,7 +69,7 @@ docker run -d -t \
 **Prepare folder on host for container volumes**
 ```
 sudo mkdir -p /opt/docker/odoo/etc/
-sudo mkdir -p /opt/docker/odoo/lib/
+sudo mkdir -p /opt/docker/odoo/addons/
 sudo mkdir -p /opt/docker/odoo/log/
 ```
 
@@ -82,10 +82,10 @@ docker run -d -t \
   --link odoo-postgresql:postgresql \
   -p 8069:8069 \
   -v /opt/docker/odoo/etc:/etc/odoo \
-  -v /opt/docker/odoo/lib:/var/lib/odoo \
+  -v /opt/docker/odoo/addons:/opt/odoo/addons \
   -v /opt/docker/odoo/log:/var/log/odoo \
   --name odoo \
-  madharjan/docker-odoo:9.0 /sbin/my_init
+  madharjan/docker-odoo:9.0
 ```
 
 **Systemd Unit File**
@@ -99,7 +99,7 @@ After=docker.service
 TimeoutStartSec=0
 
 ExecStartPre=-/bin/mkdir -p /opt/docker/odoo/etc
-ExecStartPre=-/bin/mkdir -p /opt/docker/odoo/lib
+ExecStartPre=-/bin/mkdir -p /opt/docker/odoo/addons
 ExecStartPre=-/bin/mkdir -p /opt/docker/odoo/log
 ExecStartPre=-/usr/bin/docker stop odoo
 ExecStartPre=-/usr/bin/docker rm odoo
@@ -109,10 +109,10 @@ ExecStart=/usr/bin/docker run \
   --link odoo-postgresql:postgresql \
   -p 172.17.0.1:8069:8069 \
   -v /opt/docker/odoo/etc/:/etc/odoo \
-  -v /opt/docker/odoo/lib/:/var/lib/odoo \
+  -v /opt/docker/odoo/addons:/opt/odoo/addons
   -v /opt/docker/odoo/log:/var/log/odoo \
   --name odoo \
-  madharjan/docker-odoo:9.0 /sbin/my_init
+  madharjan/docker-odoo:9.0
 
 ExecStop=/usr/bin/docker stop -t 2 odoo
 

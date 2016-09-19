@@ -3,14 +3,44 @@ set -e
 export LC_ALL=C
 export DEBIAN_FRONTEND=noninteractive
 
-if [ "$DEBUG" == true ]; then
+if [ "${DEBUG}" == true ]; then
   set -x
 fi
 
 ODOO_BUILD_PATH=/build/services/odoo
 
 ## Install Odoo Server
-apt-get install -y --no-install-recommends git nodejs npm python python-pip node-less postgresql-client
+apt-get install -y --no-install-recommends \
+build-essential \
+fontconfig \
+git \
+libevent-dev \
+libfreetype6-dev \
+libjpeg8-dev \
+libjpeg-dev \
+liblcms2-dev \
+liblcms2-utils \
+libldap2-dev \
+libpq-dev \
+libpython-dev \
+libsasl2-dev \
+libtiff5-dev \
+libwebp-dev \
+libxml2-dev \
+libxslt1-dev \
+libxslt1-dev \
+libyaml-dev \
+nodejs \
+node-less \
+npm \
+pkg-config \
+postgresql-client \
+python \
+python-pip \
+python-tk \
+tcl8.6-dev \
+tk8.6-dev \
+zlib1g-dev
 
 adduser --system --home=/opt/odoo --group odoo
 
@@ -18,8 +48,8 @@ mkdir -p /opt
 cd /opt
 
 git clone https://www.github.com/odoo/odoo --depth 1 --branch 9.0 --single-branch odoo
-#pip install /opt/odoo/doc/requirements.txt
-#pip install /opt/odoo/requirements.txt
+pip install -r /opt/odoo/doc/requirements.txt
+pip install -r /opt/odoo/requirements.txt
 
 npm install -g less less-plugin-clean-css
 
@@ -30,19 +60,6 @@ rm -rf wkhtmltox-0.12.1_linux-trusty-amd64.deb
 
 ln -s /usr/local/bin/wkhtmltopdf /usr/bin
 ln -s /usr/local/bin/wkhtmltoimage /usr/bin
-
-mkdir -p /etc/odoo
-mkdir -p /opt/odoo/addons
-mkdir -p /var/log/odoo
-
-cp /opt/odoo/debian/openerp-server.conf /etc/odoo/odoo-server.conf
-sed -e 's/addons_path = .*/addons_path = \/opt\/odoo\/addons/g' -i /etc/odoo/odoo-server.conf
-sed -e 's/logfile = .*/logfile =  \/var\/log\/odoo\/odoo-server.log/g' -i /etc/odoo/odoo-server.conf
-
-chown -R odoo:odoo /opt/odoo/
-chown odoo:root /var/log/odoo
-chown odoo: /etc/odoo/odoo-server.conf
-chmod 640 /etc/odoo/odoo-server.conf
 
 mkdir -p /etc/service/odoo
 cp ${ODOO_BUILD_PATH}/odoo.runit /etc/service/odoo/run
