@@ -20,6 +20,7 @@ sed -e "s/db_user = .*/db_user = ${POSTGRESQL_USER}/g" -i /etc/odoo/odoo-server.
 sed -e "s/db_password = .*/db_password = ${POSTGRESQL_PASS}/g" -i /etc/odoo/odoo-server.conf
 
 chown -R odoo:odoo /opt/odoo/
+chown -R odoo:odoo /var/lib/odoo/
 chown odoo:root /var/log/odoo
 chown odoo: /etc/odoo/odoo-server.conf
 chmod 640 /etc/odoo/odoo-server.conf
