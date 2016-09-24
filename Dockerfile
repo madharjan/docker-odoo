@@ -19,4 +19,4 @@ VOLUME ["/etc/odoo", "/var/lib/odoo", "/opt/odoo/extra", "/var/log/odoo"]
 
 CMD ["/sbin/my_init"]
 
-EXPOSE 5432
+EXPOSE 8069

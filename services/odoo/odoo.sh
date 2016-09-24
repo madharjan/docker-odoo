@@ -40,7 +40,8 @@ python-pip \
 python-tk \
 tcl8.6-dev \
 tk8.6-dev \
-zlib1g-dev
+zlib1g-dev \
+uuid-runtime
 
 adduser --system --home=/opt/odoo --group odoo
 
@@ -50,6 +51,7 @@ cd /opt
 git clone https://www.github.com/odoo/odoo --depth 1 --branch 9.0 --single-branch odoo
 pip install -r /opt/odoo/doc/requirements.txt
 pip install -r /opt/odoo/requirements.txt
+pip install odoorpc
 
 npm install -g less less-plugin-clean-css
 
