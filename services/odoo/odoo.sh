@@ -76,3 +76,22 @@ chmod 750 /etc/service/odoo/run
 
 ## Configure logrotate
 cp /opt/odoo/debian/logrotate /etc/logrotate.d/odoo
+
+
+## Clean up
+apt-get remove -y \
+libevent-dev \
+libfreetype6-dev \
+libjpeg8-dev \
+libjpeg-dev \
+liblcms2-dev \
+libldap2-dev \
+libpq-dev \
+libpython-dev \
+libsasl2-dev \
+libtiff5-dev \
+libwebp-dev \
+libxml2-dev \
+libxslt1-dev \
+libxslt1-dev \
+libyaml-dev \

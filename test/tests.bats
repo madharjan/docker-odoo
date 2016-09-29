@@ -26,6 +26,6 @@
 }
 
 @test "checking request: content (default)" {
-  run docker exec odoo_default /bin/bash -c "curl -s -L http://localhost:8069 | grep 'Demo'"
+  run docker exec odoo_default /bin/bash -c "curl -s -L http://localhost:8069/web | grep 'Databases'"
   [ "$status" -eq 0 ]
 }

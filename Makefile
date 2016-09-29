@@ -63,6 +63,7 @@ run:
 	sleep 3
 
 tests:
+	sleep 3
 	./bats/bin/bats test/tests.bats
 
 clean:
@@ -77,11 +78,12 @@ clean:
 tag_latest:
 	docker tag $(NAME):$(VERSION) $(NAME):latest
 
-release: test tag_latest
+release: run tests clean tag_latest
 	@if ! docker images $(NAME) | awk '{ print $$2 }' | grep -q -F $(VERSION); then echo "$(NAME) version $(VERSION) is not yet built. Please run 'make build'"; false; fi
 	@if ! head -n 1 Changelog.md | grep -q 'release date'; then echo 'Please note the release date in Changelog.md.' && false; fi
 	docker push $(NAME)
 	@echo "*** Don't forget to create a tag. git tag $(VERSION) && git push origin $(VERSION) ***"
+	curl -X POST https://hooks.microbadger.com/images/madharjan/docker-odoo/hC0t5pCAhU_wM_ayM-hNsk72vak=
 
 clean_images:
 	docker rmi $(NAME):latest $(NAME):$(VERSION) || true

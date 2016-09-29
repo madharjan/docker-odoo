@@ -1,4 +1,7 @@
 # docker-odoo
+
+[![](https://images.microbadger.com/badges/image/madharjan/docker-odoo.svg)](http://microbadger.com/images/madharjan/docker-odoo "Get your own image badge on microbadger.com")
+
 Docker container for Odoo Server based on [madharjan/docker-base](https://github.com/madharjan/docker-base/)
 
 * Odoo Server 9.0 (docker-odoo)
@@ -47,7 +50,7 @@ make clean
 # tag
 make tag_latest
 
-# update Makefile & Changelog.md
+# update Changelog.md
 # release
 make release
 ```
