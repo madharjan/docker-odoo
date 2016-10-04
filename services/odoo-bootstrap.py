@@ -52,7 +52,7 @@ def uninstall_modules():
     print uninstall_modules
 
     for module_name in uninstall_modules:
-        module_ids = Module.search([("name", "=", [module_name])])
+        module_ids = Module.search([("name", "in", [module_name])])
         for module in Module.browse(module_ids):
             if module.state == "installed" or \
                module.state == "to upgrade" or \
@@ -104,7 +104,7 @@ def install_modules():
     print install_modules
 
     for module_name in install_modules:
-        module_ids = Module.search([("name", "=", [module_name])])
+        module_ids = Module.search([("name", "in", [module_name])])
         for module in Module.browse(module_ids):
             if module.state == "installed":
                 print "Module '" + module.name + "' has already been installed"

@@ -24,6 +24,8 @@ run:
 		-e POSTGRESQL_PASSWORD=odoo \
 		--name odoo-postgresql madharjan/docker-postgresql:9.3
 
+	sleep 2
+
 	docker run -d \
 		-e POSTGRESQL_USERNAME=odoo \
 		-e POSTGRESQL_PASSWORD=odoo \
@@ -47,6 +49,8 @@ run:
 		--name odoo \
 		madharjan/docker-odoo:9.0
 
+	sleep 5
+
 	docker run -d \
 	  --link odoo-postgresql:postgresql \
 		-e DISABLE_ODOO=1 \
@@ -54,16 +58,18 @@ run:
 	  --name odoo_no_odoo \
 	  madharjan/docker-odoo:9.0
 
+	sleep 2
+
 	docker run -d \
 		--link odoo-postgresql_default:postgresql \
 		-e DEBUG=true \
 		--name odoo_default \
 		madharjan/docker-odoo:9.0
 
-	sleep 3
+	sleep 5
 
 tests:
-	sleep 3
+	sleep 4
 	./bats/bin/bats test/tests.bats
 
 clean:
