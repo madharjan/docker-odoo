@@ -46,8 +46,7 @@ run:
 	  -v /tmp/odoo/addons:/opt/odoo/extra \
 	  -v /tmp/odoo/lib:/var/lib/odoo \
 		-e DEBUG=true \
-		--name odoo \
-		madharjan/docker-odoo:9.0
+		--name odoo $(NAME):$(VERSION)
 
 	sleep 5
 
@@ -55,16 +54,14 @@ run:
 	  --link odoo-postgresql:postgresql \
 		-e DISABLE_ODOO=1 \
 		-e DEBUG=true \
-	  --name odoo_no_odoo \
-	  madharjan/docker-odoo:9.0
+	  --name odoo_no_odoo $(NAME):$(VERSION)
 
 	sleep 2
 
 	docker run -d \
 		--link odoo-postgresql_default:postgresql \
 		-e DEBUG=true \
-		--name odoo_default \
-		madharjan/docker-odoo:9.0
+		--name odoo_default $(NAME):$(VERSION)
 
 	sleep 5
 

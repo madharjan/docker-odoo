@@ -3,7 +3,7 @@ set -e
 export LC_ALL=C
 export DEBIAN_FRONTEND=noninteractive
 
-if [ "${DEBUG}" == true ]; then
+if [ "${DEBUG}" = true ]; then
   set -x
 fi
 
@@ -47,6 +47,9 @@ adduser --system --home=/opt/odoo --group odoo
 
 mkdir -p /opt
 cd /opt
+
+git config --global http.proxy ${HTTP_PROXY}
+git config --global https.proxy ${HTTP_PROXY}
 
 git clone https://www.github.com/odoo/odoo --depth 1 --branch 9.0 --single-branch odoo
 pip install -r /opt/odoo/doc/requirements.txt
