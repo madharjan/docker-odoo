@@ -4,7 +4,13 @@
 
 Docker container for Odoo Server based on [madharjan/docker-base](https://github.com/madharjan/docker-base/)
 
-* Odoo Server 9.0 (docker-odoo)
+**Features**
+* Environment variables to set database setting or link to postgresql container
+* Environment variables to set admin password and company name
+* Environment variables to install or uninstall modules on startup
+* Bats ([sstephenson/bats](https://github.com/sstephenson/bats/)) based test cases
+
+## Odoo Server 9.0 (docker-odoo)
 
 **Environment**
 
