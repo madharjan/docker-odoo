@@ -1,18 +1,18 @@
 # docker-odoo
 
-[![](https://images.microbadger.com/badges/image/madharjan/docker-odoo.svg)](http://microbadger.com/images/madharjan/docker-odoo "Get your own image badge on microbadger.com")
+[![Build Status](https://travis-ci.com/madharjan/docker-odoo.svg?branch=master)](https://travis-ci.com/madharjan/docker-odoo)
+[![Layers](https://images.microbadger.com/badges/image/madharjan/docker-odoo.svg)](http://microbadger.com/images/madharjan/docker-odoo)
 
 Docker container for Odoo Server based on [madharjan/docker-base](https://github.com/madharjan/docker-base/)
 
-**Features**
+## Features
+
 * Environment variables to set database setting or link to postgresql container
 * Environment variables to set admin password and company name
 * Environment variables to install or uninstall modules on startup
 * Bats ([sstephenson/bats](https://github.com/sstephenson/bats/)) based test cases
 
 ## Odoo Server 9.0 (docker-odoo)
-
-**Environment**
 
 | Variable               | Default                | Example          |
 |------------------------|------------------------|------------------|
@@ -34,21 +34,23 @@ Docker container for Odoo Server based on [madharjan/docker-base](https://github
 
 ## Build
 
-**Clone this project**
-```
+### Clone this project
+
+```bash
 git clone https://github.com/madharjan/docker-odoo
 cd docker-odoo
 ```
 
-**Build Containers**
-```
+### Build Containers
+
+```bash
 # login to DockerHub
 docker login
 
 # build
 make
 
-# test
+# tests
 make run
 make tests
 make clean
@@ -56,55 +58,55 @@ make clean
 # tag
 make tag_latest
 
-# update Changelog.md
 # release
 make release
 ```
 
-**Tag and Commit to Git**
-```
-git tag 9.0
-git push origin 9.0
+### Tag and Commit to Git
+
+```bash
+git tag 12.0
+git push origin 12.0
 ```
 
 ## Run Container
 
-### PostgreSQL for Odoo
+### Prepare folder on host for container volumes
 
-**Prepare folder on host for container volumes**
-```
+```bash
 sudo mkdir -p /opt/docker/odoo/postgresql/etc/
 sudo mkdir -p /opt/docker/odoo/postgresql/lib/
 sudo mkdir -p /opt/docker/odoo/postgresql/log/
 ```
 
-**Run `docker-postgresql`**
-```
+### Run `docker-postgresql`
+
+```bash
 docker stop odoo-postgresql
 docker rm odoo-postgresql
 
 docker run -d \
   -e POSTGRESQL_USERNAME=odoo \
   -e POSTGRESQL_PASSWORD=Pa55w0rd \
-  -v /opt/docker/odoo/postgresql/etc:/etc/postgresql/9.3/main \
-  -v /opt/docker/odoo/postgresql/lib:/var/lib/postgresql/9.3/main \
+  -v /opt/docker/odoo/postgresql/etc:/etc/postgresql/9.5/main \
+  -v /opt/docker/odoo/postgresql/lib:/var/lib/postgresql/9.5/main \
   -v /opt/docker/odoo/postgresql/log:/var/log/postgresql \
   --name odoo-postgresql \
-  madharjan/docker-postgresql:9.3
+  madharjan/docker-postgresql:9.5
 ```
 
-### Odoo Server
+### Prepare folder on host for container volumes
 
-**Prepare folder on host for container volumes**
-```
+```bash
 sudo mkdir -p /opt/docker/odoo/etc/
 sudo mkdir -p /opt/docker/odoo/addons/
 sudo mkdir -p /opt/docker/odoo/lib/
 sudo mkdir -p /opt/docker/odoo/log/
 ```
 
-**Run `docker-odoo` linked with `docker-postgresql`**
-```
+### Run `docker-odoo` linked with `docker-postgresql`
+
+```bash
 docker stop odoo
 docker rm odoo
 
@@ -122,10 +124,12 @@ docker run -d \
   -v /opt/docker/odoo/lib:/var/lib/odoo \  
   -v /opt/docker/odoo/log:/var/log/odoo \
   --name odoo \
-  madharjan/docker-odoo:9.0
+  madharjan/docker-odoo:12.0
 ```
 
-**Systemd Unit File**
+## Run via Systemd
+
+### Systemd Unit File - basic example
 ```
 [Unit]
 Description=Odoo Server
@@ -141,17 +145,17 @@ ExecStartPre=-/bin/mkdir -p /opt/docker/odoo/lib
 ExecStartPre=-/bin/mkdir -p /opt/docker/odoo/log
 ExecStartPre=-/usr/bin/docker stop odoo
 ExecStartPre=-/usr/bin/docker rm odoo
-ExecStartPre=-/usr/bin/docker pull madharjan/docker-odoo:9.0
+ExecStartPre=-/usr/bin/docker pull madharjan/docker-odoo:12.0
 
 ExecStart=/usr/bin/docker run \
   --link odoo-postgresql:postgresql \
-  -p 172.17.0.1:8069:8069 \
+  -p 8069:8069 \
   -v /opt/docker/odoo/etc:/etc/odoo \
   -v /opt/docker/odoo/addons:/opt/odoo/extra \
   -v /opt/docker/odoo/lib:/var/lib/odoo \  
   -v /opt/docker/odoo/log:/var/log/odoo \
   --name odoo \
-  madharjan/docker-odoo:9.0
+  madharjan/docker-odoo:12.0
 
 ExecStop=/usr/bin/docker stop -t 2 odoo
 

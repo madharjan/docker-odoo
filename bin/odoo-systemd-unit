@@ -1,0 +1,55 @@
+#!/bin/sh
+
+set e
+
+if [ "${DEBUG}" = true ]; then
+  set -x
+fi
+
+DEF_PORT=5432
+DEF_VOLUME_HOME=${VOLUME_HOME}
+DEF_VERSION=9.5
+DEF_TEMPLATE_DATABASE=temp
+DEF_TEMPLATE_USERNAME=postgres
+DEF_TEMPLATE_PASSWORD=postgres
+
+PORT=${PORT:-$DEF_PORT}
+VOLUME_HOME=${VOLUME_HOME:-$DEF_VOLUME_HOME}
+VERSION=${VERSION:-$DEF_VERSION}
+
+TEMPLATE_DATABASE=${TEMPLATE_DATABASE:-$DEF_TEMPLATE_DATABASE}
+TEMPLATE_USERNAME=${TEMPLATE_USERNAME:-$DEF_TEMPLATE_USERNAME}
+TEMPLATE_PASSWORD=${TEMPLATE_PASSWORD:-$DEF_TEMPLATE_PASSWORD}
+
+/bin/cat <<-EOF
+[Unit]
+Description=Postgres SQL Server
+
+After=docker.service
+
+[Service]
+TimeoutStartSec=0
+
+ExecStartPre=-/bin/mkdir -p ${VOLUME_HOME}/template/etc
+ExecStartPre=-/bin/mkdir -p ${VOLUME_HOME}/template/lib
+ExecStartPre=-/bin/mkdir -p ${VOLUME_HOME}/template/log
+ExecStartPre=-/usr/bin/docker stop template
+ExecStartPre=-/usr/bin/docker rm template
+ExecStartPre=-/usr/bin/docker pull madharjan/docker-template:9.5
+
+ExecStart=/usr/bin/docker run \\
+  -e TEMPLATE_DATABASE=${TEMPLATE_DATABASE} \\
+  -e TEMPLATE_USERNAME=${TEMPLATE_USERNAME} \\
+  -e TEMPLATE_PASSWORD=${TEMPLATE_PASSWORD} \\
+  -p ${PORT}:3306 \\
+  -v ${VOLUME_HOME}/template/etc:/etc/template/etc/9.5/main \\
+  -v ${VOLUME_HOME}/template/lib:/var/lib/template/9.5/main \\
+  -v ${VOLUME_HOME}/template/log:/var/log/template \\
+  --name template \\
+  madharjan/docker-template:9.5
+
+ExecStop=/usr/bin/docker stop -t 2 template
+
+[Install]
+WantedBy=multi-user.target
+EOF

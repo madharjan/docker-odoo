@@ -22,7 +22,7 @@ liblcms2-dev \
 liblcms2-utils \
 libldap2-dev \
 libpq-dev \
-libpython-dev \
+libpython3-dev \
 libsasl2-dev \
 libtiff5-dev \
 libwebp-dev \
@@ -35,33 +35,37 @@ node-less \
 npm \
 pkg-config \
 postgresql-client \
-python \
-python-pip \
-python-tk \
+python3 \
+python3-pip \
+python3-tk \
 tcl8.6-dev \
 tk8.6-dev \
 zlib1g-dev \
-uuid-runtime
+uuid-runtime 
+
+pip3 install setuptools --upgrade
+pip3 install wheel
 
 adduser --system --home=/opt/odoo --group odoo
 
 mkdir -p /opt
 cd /opt
 
-git config --global http.proxy ${HTTP_PROXY}
-git config --global https.proxy ${HTTP_PROXY}
+#git config --global http.proxy ${HTTP_PROXY}
+#git config --global https.proxy ${HTTP_PROXY}
 
-git clone https://www.github.com/odoo/odoo --depth 1 --branch 9.0 --single-branch odoo
-pip install -r /opt/odoo/doc/requirements.txt
-pip install -r /opt/odoo/requirements.txt
-pip install odoorpc
+git clone https://www.github.com/odoo/odoo --depth 1 --branch 12.0 --single-branch odoo
+pip3 install -r /opt/odoo/doc/requirements.txt
+pip3 install -r /opt/odoo/requirements.txt
+pip3 install odoorpc
 
 npm install -g less less-plugin-clean-css
 
-wget http://download.gna.org/wkhtmltopdf/0.12/0.12.1/wkhtmltox-0.12.1_linux-trusty-amd64.deb
-dpkg --force-depends -i wkhtmltox-0.12.1_linux-trusty-amd64.deb
+wget https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.stretch_amd64.deb 
+dpkg --force-depends -i wkhtmltox_0.12.5-1.stretch_amd64.deb
+
 apt-get install -y -f --no-install-recommends
-rm -rf wkhtmltox-0.12.1_linux-trusty-amd64.deb
+rm -rf wkhtmltox_0.12.5-1.stretch_amd64.deb
 
 ln -s /usr/local/bin/wkhtmltopdf /usr/bin
 ln -s /usr/local/bin/wkhtmltoimage /usr/bin
@@ -98,3 +102,5 @@ libxml2-dev \
 libxslt1-dev \
 libxslt1-dev \
 libyaml-dev \
+
+rm -rf /root/.cache

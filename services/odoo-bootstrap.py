@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import odoorpc
 import os
@@ -35,11 +35,11 @@ def create_database():
     odoo = get_session(login=False)
 
     if ODOO_DATABASE_NAME not in odoo.db.list():
-        print "Creating Database '" + ODOO_DATABASE_NAME + "'"
+        print("Creating Database '" + ODOO_DATABASE_NAME + "'")
         odoo.db.create(ODOO_SUPER_PASSWORD, ODOO_DATABASE_NAME, demo=False, lang=ODOO_LANG, admin_password=ODOO_ADMIN_PASSWORD)
-        print "Creating Done"
+        print("Creating Done")
     else:
-        print "Dateabase '" + ODOO_DATABASE_NAME + "' already exists"
+        print("Dateabase '" + ODOO_DATABASE_NAME + "' already exists")
 
 
 def uninstall_modules():
@@ -48,8 +48,8 @@ def uninstall_modules():
     Module = odoo.env["ir.module.module"]
 
     uninstall_modules = ODOO_UNINSTALL_MODULES.split(", ")
-    print "Module to uninstall"
-    print uninstall_modules
+    print("Module to uninstall")
+    print(uninstall_modules)
 
     for module_name in uninstall_modules:
         module_ids = Module.search([("name", "in", [module_name])])
@@ -58,18 +58,18 @@ def uninstall_modules():
                module.state == "to upgrade" or \
                module.state == "to remove" or \
                module.state == "to install":
-                print "Uninstalling Module '" + module_name + "'"
+                print("Uninstalling Module '" + module_name + "'")
                 Module.button_immediate_uninstall(module_ids)
-                print "Uninstalling Done"
+                print("Uninstalling Done")
 
 
 def update_company():
 
     odoo = get_session()
     company = odoo.env.user.company_id
-    print "Setting Company to '" + ODOO_COMPANY +"'"
+    print("Setting Company to '" + ODOO_COMPANY +"'")
     company.name = ODOO_COMPANY
-    print "Setting Done"
+    print("Setting Done")
 
 
 def update_admin_user():
@@ -77,7 +77,7 @@ def update_admin_user():
     odoo = get_session()
     admin = odoo.env.user
 
-    print "Configuring Admin User"
+    print("Configuring Admin User")
 
     group_technical_feature = odoo.env.ref("base.group_no_one")
     #group_sales_manager = odoo.env.ref("base.group_sales_manager")
@@ -91,7 +91,7 @@ def update_admin_user():
     if not admin.tz:
         admin.tz = ODOO_TIMEZONE
 
-    print "Configuring Done"
+    print("Configuring Done")
 
 
 def install_modules():
@@ -100,18 +100,18 @@ def install_modules():
     Module = odoo.env["ir.module.module"]
 
     install_modules = ODOO_INSTALL_MODULES.split(", ")
-    print "Module to install"
-    print install_modules
+    print("Module to install")
+    print(install_modules)
 
     for module_name in install_modules:
         module_ids = Module.search([("name", "in", [module_name])])
         for module in Module.browse(module_ids):
             if module.state == "installed":
-                print "Module '" + module.name + "' has already been installed"
+                print("Module '" + module.name + "' has already been installed")
             else:
-                print "Installing Module '" + module.name + "' ..."
+                print("Installing Module '" + module.name + "' ...")
                 Module.button_immediate_install(module_ids)
-                print "Installing Done"
+                print("Installing Done")
 
 
 def main():

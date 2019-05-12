@@ -27,7 +27,9 @@ POSTGRESQL_PASS=${POSTGRESQL_PASS:-${POSTGRESQL_ENV_POSTGRESQL_PASSWORD}}
 ODOO_SMTP_HOST=${ODOO_SMTP_HOST:-172.17.0.1}
 ODOO_SMTP_PORT=${ODOO_SMTP_PORT:-25}
 
-if [ ! -f "/etc/odoo/odoo-server.conf" ]; then
+if [ -f "/etc/odoo/odoo-server.conf" ]; then
+  echo "odoo-server.conf already exists"
+else 
   cp /config/etc/odoo/odoo-server.conf /etc/odoo/odoo-server.conf
 
   sed -e "s/db_host = .*/db_host = ${POSTGRESQL_HOST}/g" -i /etc/odoo/odoo-server.conf
