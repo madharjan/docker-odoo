@@ -1,5 +1,5 @@
 @test "checking process: odoo" {
-  run docker exec odoo /bin/bash -c "ps aux | grep -v grep | grep 'python /opt/odoo/openerp-server'"
+  run docker exec odoo /bin/bash -c "ps aux | grep -v grep | grep 'python3 /opt/odoo/odoo-bin'"
   [ "$status" -eq 0 ]
 }
 

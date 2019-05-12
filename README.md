@@ -10,9 +10,9 @@ Docker container for Odoo Server based on [madharjan/docker-base](https://github
 * Environment variables to set database setting or link to postgresql container
 * Environment variables to set admin password and company name
 * Environment variables to install or uninstall modules on startup
-* Bats ([sstephenson/bats](https://github.com/sstephenson/bats/)) based test cases
-
-## Odoo Server 9.0 (docker-odoo)
+* Bats ([bats-core/bats-core](https://github.com/bats-core/bats-core)) based test cases
+  
+## Odoo Server 12.0 (docker-odoo)
 
 | Variable               | Default                | Example          |
 |------------------------|------------------------|------------------|
@@ -30,7 +30,6 @@ Docker container for Odoo Server based on [madharjan/docker-base](https://github
 | POSTGRESQL_PORT        | linked to 'postgresql' | 5432             |
 | POSTGRESQL_USER        | linked to 'postgresql' | odoo             |
 | POSTGRESQL_PASS        | linked to 'postgresql' | pass              |
-
 
 ## Build
 
@@ -130,7 +129,8 @@ docker run -d \
 ## Run via Systemd
 
 ### Systemd Unit File - basic example
-```
+
+```txt
 [Unit]
 Description=Odoo Server
 
@@ -161,4 +161,57 @@ ExecStop=/usr/bin/docker stop -t 2 odoo
 
 [Install]
 WantedBy=multi-user.target
+```
+
+### Generate Systemd Unit File
+
+| Variable                 | Default                     | Example                                                          |
+|--------------------------|-----------------------------|------------------------------------------------------------------|
+| PORT                     | 8080                        | 8000                                                             |
+| VOLUME_HOME              | /opt/docker                 | /opt/data                                                        |
+| VERSION                  | 12.0                        | latest                                                           |
+| ODOO_DATABASE_NAME       | demo                        |                                                                  |
+| ODOO_ADMIN_PASSWORD      | Pa55w0rd                    |                                                                  |
+| ODOO_ADMIN_EMAIL         | root@localhost.localdomain  |                                                                  |
+| ODOO_COMPANY             | Acme Pte Ltd                |                                                                  |
+| ODOO_INSTALL_MODULES     | website                     | website,projects,inventory,blogs                                 |
+| ODOO_UNINSTALL_MODULES   |                             |                                                                  |
+| ODOO_LANG                | en_US                       |                                                                  |
+| POSGRESQL_DATABASE       | postgresql                  |                                                                  |
+
+```bash
+docker run --rm -it \
+  -e PORT=5432 \
+  -e VOLUME_HOME=/opt/docker \
+  -e VERSION=9.5 \
+  -e POSTGRESQL_DATABASE=odoo \
+  -e POSTGRESQL_USERNAME=odoo \
+  -e POSTGRESQL_PASSWORD=odoo \
+  madharjan/docker-postgresql:9.5 \
+  /bin/sh -c "postgresql-systemd-unit" | \
+  sudo tee /etc/systemd/system/postgresql.service
+
+sudo systemctl enable postgresql
+sudo systemctl start postgresql
+```
+
+```bash
+docker run --rm -it \
+  -e PORT=8080 \
+  -e VOLUME_HOME=/opt/docker \
+  -e VERSION=12.0 \
+  -e POSGRESQL_DATABASE=postgresql \
+  -e ODOO_DATABASE_NAME=demo \
+  -e ODOO_ADMIN_PASSWORD=Pa55w0rd \
+  -e ODOO_ADMIN_EMAIL=root@localhost.localdomain \
+  -e ODOO_COMPANY="Acme Pte Ltd" \
+  -e ODOO_INSTALL_MODULES="website" \
+  -e ODOO_UNINSTALL_MODULES="discuss" \
+  -e ODOO_LANG=${ODOO_LANG} \
+  madharjan/docker-template:1.0 \
+  /bin/sh -c "odoo-systemd-unit" | \
+  sudo tee /etc/systemd/system/odoo.service
+
+sudo systemctl enable odoo
+sudo systemctl start odoo
 ```

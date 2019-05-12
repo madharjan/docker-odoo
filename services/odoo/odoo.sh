@@ -94,7 +94,7 @@ libjpeg-dev \
 liblcms2-dev \
 libldap2-dev \
 libpq-dev \
-libpython-dev \
+libpython3-dev \
 libsasl2-dev \
 libtiff5-dev \
 libwebp-dev \
@@ -104,3 +104,9 @@ libxslt1-dev \
 libyaml-dev \
 
 rm -rf /root/.cache
+rm -rf /opt/odoo/.github
+rm -rf /opt/odoo/.tx
+rm -rf /opt/odoo/.git
+rm -rf /opt/odoo/doc
+rm -rf /opt/odoo/setup
+rm -rf /opt/odoo/debian

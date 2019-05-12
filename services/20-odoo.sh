@@ -75,6 +75,7 @@ if [ "${DISABLE_ODOO}" -eq 0 ]; then
     echo "Configuring Odoo ...."
     /opt/odoo/odoo-bootstrap.py
     echo "Configuring Done"
+    date
     exit 0
   }
 
