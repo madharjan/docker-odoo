@@ -61,6 +61,7 @@ if [ "${DISABLE_ODOO}" -eq 0 ]; then
 
   function waitAandInitializeOdoo()
   {
+    date
     echo "Waiting for Odoo Server to come up ..."
 
     while read LINE; \

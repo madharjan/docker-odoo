@@ -68,7 +68,8 @@ run:
 	sleep 5
 
 tests:
-	sleep 120
+	sleep 180
+	docker logs odoo
 	./bats/bin/bats test/tests.bats
 
 stop:
