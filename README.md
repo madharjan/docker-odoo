@@ -208,7 +208,7 @@ docker run --rm -it \
   -e ODOO_INSTALL_MODULES="website" \
   -e ODOO_UNINSTALL_MODULES="discuss" \
   -e ODOO_LANG=${ODOO_LANG} \
-  madharjan/docker-template:1.0 \
+  madharjan/docker-odoo:12.0 \
   /bin/sh -c "odoo-systemd-unit" | \
   sudo tee /etc/systemd/system/odoo.service
 

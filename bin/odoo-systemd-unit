@@ -52,11 +52,11 @@ ExecStartPre=-/usr/bin/docker rm odoo
 ExecStartPre=-/usr/bin/docker pull madharjan/docker-odoo:${VERSION}
 
 ExecStart=/usr/bin/docker run \\
-  --link {POSGRESQL_DATABASE}:postgresql \\
-  -e ODOO_DATABASE_NAME=${DOO_DATABASE_NAME} \\
+  --link ${POSGRESQL_DATABASE}:postgresql \\
+  -e ODOO_DATABASE_NAME=${ODOO_DATABASE_NAME} \\
   -e ODOO_ADMIN_PASSWORD=${ODOO_ADMIN_PASSWORD} \\
   -e ODOO_ADMIN_EMAIL=${ODOO_ADMIN_EMAIL} \\
-  -e ODOO_COMPANY="${ODOO_COMPANY}"" \\
+  -e ODOO_COMPANY="${ODOO_COMPANY}" \\
   -e ODOO_INSTALL_MODULES="${ODOO_INSTALL_MODULES}" \\
   -e ODOO_UNINSTALL_MODULES="${ODOO_UNINSTALL_MODULES}" \\
   -e ODOO_LANG=${ODOO_LANG} \\
