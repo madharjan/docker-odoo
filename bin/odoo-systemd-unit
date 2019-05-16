@@ -6,33 +6,41 @@ if [ "${DEBUG}" = true ]; then
   set -x
 fi
 
-DEF_PORT=8080
-DEF_VOLUME_HOME=${VOLUME_HOME}
-DEF_VERSION=12.0
+VERSION=12.0
 
-DEF_ODOO_DATABASE_NAME=Demo
-DEF_ODOO_ADMIN_PASSWORD=Pa55w0rd
-DEF_ODOO_ADMIN_EMAIL=root@localhost.localdomain
-DEF_ODOO_COMPANY=Acme Pte Ltd
+DEF_PORT=
+DEF_VOLUME_HOME=/opt/docker
+DEF_NAME=odoo
+
+DEF_ODOO_DATABASE_NAME=odoo
+DEF_ODOO_ADMIN_PASSWORD=
+DEF_ODOO_ADMIN_EMAIL=
+DEF_ODOO_COMPANY_NAME=Acme Pte Ltd
 DEF_ODOO_INSTALL_MODULES=website
 DEF_ODOO_UNINSTALL_MODULES=
 DEF_ODOO_LANG=en_US
 
-DEF_POSGRESQL_DATABASE=postgresql
+DEF_POSTGRESQL_DATABASE=postgresql
 
 PORT=${PORT:-$DEF_PORT}
 VOLUME_HOME=${VOLUME_HOME:-$DEF_VOLUME_HOME}
-VERSION=${VERSION:-$DEF_VERSION}
+NAME=${NAME:-$DEF_NAME}
 
 ODOO_DATABASE_NAME=${ODOO_DATABASE_NAME:-$DEF_ODOO_DATABASE_NAME}
 ODOO_ADMIN_PASSWORD=${ODOO_ADMIN_PASSWORD:-$DEF_ODOO_ADMIN_PASSWORD}
 ODOO_ADMIN_EMAIL=${ODOO_ADMIN_EMAIL:-$DEF_ODOO_ADMIN_EMAIL}
-ODOO_COMPANY=${ODOO_COMPANY:-$DEF_ODOO_COMPANY}
+ODOO_COMPANY_NAME=${ODOO_COMPANY_NAME:-$DEF_ODOO_COMPANY_NAME}
 ODOO_INSTALL_MODULES=${ODOO_INSTALL_MODULES:-$DEF_ODOO_INSTALL_MODULES}
 ODOO_UNINSTALL_MODULES=${ODOO_UNINSTALL_MODULES:-$DEF_ODOO_UNINSTALL_MODULES}
-ODOO_LANG=${ODOO_LANG:-DEF_ODOO_LANG}
+ODOO_LANG=${ODOO_LANG:-$DEF_ODOO_LANG}
 
-POSGRESQL_DATABASE=${POSGRESQL_DATABASE:-DEF_POSGRESQL_DATABASE}
+POSTGRESQL_DATABASE=${POSTGRESQL_DATABASE:-DEF_POSTGRESQL_DATABASE}
+
+if [ -z ${PORT} ]; then
+  PORT_LINE=""
+else 
+  PORT_LINE="-p ${PORT}:8069 "
+fi
 
 /bin/cat <<-EOF
 [Unit]
@@ -43,32 +51,31 @@ After=docker.service
 [Service]
 TimeoutStartSec=0
 
-ExecStartPre=-/bin/mkdir -p ${VOLUME_HOME}/odoo/etc
-ExecStartPre=-/bin/mkdir -p ${VOLUME_HOME}/odoo/addons
-ExecStartPre=-/bin/mkdir -p ${VOLUME_HOME}/odoo/lib
-ExecStartPre=-/bin/mkdir -p ${VOLUME_HOME}/odoo/log
-ExecStartPre=-/usr/bin/docker stop odoo
-ExecStartPre=-/usr/bin/docker rm odoo
+ExecStartPre=-/bin/mkdir -p ${VOLUME_HOME}/${NAME}/etc
+ExecStartPre=-/bin/mkdir -p ${VOLUME_HOME}/${NAME}/addons
+ExecStartPre=-/bin/mkdir -p ${VOLUME_HOME}/${NAME}/lib
+ExecStartPre=-/bin/mkdir -p ${VOLUME_HOME}/${NAME}/log
+ExecStartPre=-/usr/bin/docker stop ${NAME}
+ExecStartPre=-/usr/bin/docker rm ${NAME}
 ExecStartPre=-/usr/bin/docker pull madharjan/docker-odoo:${VERSION}
 
 ExecStart=/usr/bin/docker run \\
-  --link ${POSGRESQL_DATABASE}:postgresql \\
+  --link ${POSTGRESQL_DATABASE}:postgresql \\
   -e ODOO_DATABASE_NAME=${ODOO_DATABASE_NAME} \\
   -e ODOO_ADMIN_PASSWORD=${ODOO_ADMIN_PASSWORD} \\
   -e ODOO_ADMIN_EMAIL=${ODOO_ADMIN_EMAIL} \\
-  -e ODOO_COMPANY="${ODOO_COMPANY}" \\
+  -e ODOO_COMPANY_NAME="${ODOO_COMPANY_NAME}" \\
   -e ODOO_INSTALL_MODULES="${ODOO_INSTALL_MODULES}" \\
   -e ODOO_UNINSTALL_MODULES="${ODOO_UNINSTALL_MODULES}" \\
   -e ODOO_LANG=${ODOO_LANG} \\
-  -p ${PORT}:8069 \\
-  -v ${VOLUME_HOME}/odoo/etc:/etc/odoo \\
+  ${PORT_LINE}-v ${VOLUME_HOME}/odoo/etc:/etc/odoo \\
   -v ${VOLUME_HOME}/odoo/addons:/opt/odoo/extra \\
   -v ${VOLUME_HOME}/odoo/lib:/var/lib/odoo \\
   -v ${VOLUME_HOME}/odoo/log:/var/log/odoo \\
-  --name odoo \\
+  --name ${NAME} \\
   madharjan/docker-odoo:${VERSION}
 
-ExecStop=/usr/bin/docker stop -t 2 odoo
+ExecStop=/usr/bin/docker stop -t 2 ${NAME}
 
 [Install]
 WantedBy=multi-user.target

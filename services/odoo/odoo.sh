@@ -41,7 +41,8 @@ python3-tk \
 tcl8.6-dev \
 tk8.6-dev \
 zlib1g-dev \
-uuid-runtime 
+uuid-runtime \
+iproute2
 
 pip3 install setuptools --upgrade
 pip3 install wheel
@@ -61,7 +62,7 @@ pip3 install odoorpc
 
 npm install -g less less-plugin-clean-css
 
-wget https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.stretch_amd64.deb 
+wget -nv https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.stretch_amd64.deb 
 dpkg --force-depends -i wkhtmltox_0.12.5-1.stretch_amd64.deb
 
 apt-get install -y -f --no-install-recommends
@@ -83,7 +84,6 @@ chmod 750 /etc/service/odoo/run
 
 ## Configure logrotate
 cp /opt/odoo/debian/logrotate /etc/logrotate.d/odoo
-
 
 ## Clean up
 apt-get remove -y \

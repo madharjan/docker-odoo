@@ -13,7 +13,7 @@ ENV ODOO_VERSION ${ODOO_VERSION}
 RUN mkdir -p /build
 COPY . /build
 
-RUN /build/scripts/install.sh && /build/scripts/cleanup.sh
+RUN chmod 755 /build/scripts/*.sh && /build/scripts/install.sh && /build/scripts/cleanup.sh
 
 VOLUME ["/etc/odoo", "/var/lib/odoo", "/opt/odoo/extra", "/var/log/odoo"]
 

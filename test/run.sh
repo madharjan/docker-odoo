@@ -29,10 +29,8 @@ sudo mkdir -p /opt/docker/odoo/log/
 docker run -d -t \
   -e DEBUG=true \
   --link odoo-postgresql:postgresql \
-  -e ODOO_DATABASE_NAME=odoo \
   -e ODOO_ADMIN_PASSWORD=Pa55w0rd \
   -e ODOO_ADMIN_EMAIL=admin@local.host \
-  -e ODOO_COMPANY="Acme Pte Ltd" \
   -p 8080:8069 \
   -v /opt/docker/odoo/etc:/etc/odoo \
   -v /opt/docker/odoo/addons:/opt/odoo/extra \

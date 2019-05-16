@@ -8,15 +8,15 @@ ODOO_SUPER_PASSWORD = os.getenv("ODOO_SUPER_PASSWORD", "admin")
 ODOO_HOST = os.getenv("ODOO_HOST", "localhost")
 ODOO_PORT = os.getenv("ODOO_PORT", 8069)
 
-ODOO_DATABASE_NAME = os.getenv("ODOO_DATABASE_NAME", "demo")
-ODOO_ADMIN_EMAIL = os.getenv("ODOO_ADMIN_EMAIL", "admin@local.host")
-ODOO_ADMIN_PASSWORD = os.getenv("ODOO_ADMIN_PASSWORD", "password")
+ODOO_DATABASE_NAME = os.getenv("ODOO_DATABASE_NAME", "odoo")
+ODOO_ADMIN_EMAIL = os.getenv("ODOO_ADMIN_EMAIL", "")
+ODOO_ADMIN_PASSWORD = os.getenv("ODOO_ADMIN_PASSWORD", "")
 
 ODOO_LANG = os.getenv("ODOO_LANG", "en_US")
-ODOO_COMPANY = os.getenv("ODOO_COMPANY", "Demo")
+ODOO_COMPANY_NAME = os.getenv("ODOO_COMPANY_NAME", "Acme Pte Ltd")
 ODOO_TIMEZONE = os.getenv("ODOO_TIMEZONE", "Asia/Singapore")
 
-ODOO_INSTALL_MODULES = os.getenv("ODOO_INSTALL_MODULES", "")
+ODOO_INSTALL_MODULES = os.getenv("ODOO_INSTALL_MODULES", "website")
 ODOO_UNINSTALL_MODULES = os.getenv("ODOO_UNINSTALL_MODULES", "")
 
 def get_session(login=True):
@@ -67,8 +67,8 @@ def update_company():
 
     odoo = get_session()
     company = odoo.env.user.company_id
-    print("Setting Company to '" + ODOO_COMPANY +"'")
-    company.name = ODOO_COMPANY
+    print("Setting Company to '" + ODOO_COMPANY_NAME +"'")
+    company.name = ODOO_COMPANY_NAME
     print("Setting Done")
 
 
