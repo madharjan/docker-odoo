@@ -38,9 +38,6 @@ Docker container for Odoo Server based on [madharjan/docker-base](https://github
 git clone https://github.com/madharjan/docker-odoo
 cd docker-odoo
 
-# login to DockerHub
-docker login
-
 # build
 make
 
@@ -69,7 +66,7 @@ docker rm odoo-postgresql
 # run container
 docker run -d \
   -e POSTGRESQL_USERNAME=odoo \
-  -e POSTGRESQL_PASSWORD=Pa55w0rd \
+  -e POSTGRESQL_PASSWORD=odoo \
   -v /opt/docker/odoo/postgresql/etc:/etc/postgresql/9.5/main \
   -v /opt/docker/odoo/postgresql/lib:/var/lib/postgresql/9.5/main \
   -v /opt/docker/odoo/postgresql/log:/var/log/postgresql \
@@ -154,12 +151,12 @@ WantedBy=multi-user.target
 | ODOO_INSTALL_MODULES     | website                     | website,blogs                                                    |
 | ODOO_UNINSTALL_MODULES   |                             |                                                                  |
 | ODOO_LANG                | en_US                       | en_UK                                                            |
-| POSTGRESQL_DATABASE      |                             | postgresql                                                       |
+| LINK_DATABASE_CONTAINER  |                             | postgresql                                                       |
 
 ```bash
 # generate postgresql.service
 docker run --rm \
-  -e NAME=docker-postgresql \
+  -e NAME=postgresql \
   -e POSTGRESQL_PASSWORD=odoo \
   madharjan/docker-postgresql:9.5 \
   postgresql-systemd-unit | \
@@ -171,7 +168,7 @@ sudo systemctl start postgresql
 # generate odoo.service
 docker run --rm \
   -e PORT=8069 \
-  -e POSTGRESQL_DATABASE=docker-postgresql \  
+  -e LINK_DATABASE_CONTAINER=postgresql \
   -e ODOO_ADMIN_PASSWORD=Pa55w0rd \
   -e ODOO_ADMIN_EMAIL=root@localhost.localdomain \
   -e ODOO_COMPANY_NAME="Acme Pte Ltd" \
