@@ -76,7 +76,7 @@ run:
 	sleep 5
 
 test:
-	#sleep 190
+	sleep 190
 	./bats/bin/bats test/tests.bats
 
 stop:
