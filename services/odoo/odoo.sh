@@ -9,33 +9,37 @@ fi
 
 ODOO_BUILD_PATH=/build/services/odoo
 
+curl -sL https://deb.nodesource.com/setup_8.x | bash -
+
 ## Install Odoo Server
 apt-get install -y --no-install-recommends \
 build-essential \
 git \
 nodejs \
-npm \
 postgresql-client \
 python3 \
 python3-pip \
+python3-renderpm \
+python3-setuptools \
+python3-wheel \
+python3-watchdog \
+xz-utils \
 iproute2 \
 libpython3-dev \
 libsasl2-dev \
 libldap2-dev \
-uuid-runtime \
-fontconfig \
-libfreetype6 \
-libjpeg-turbo8 \
-libpng12-0 \
-libx11-6 \
-libxcb1  \
-libxext6  \
-libxrender1 \
-xfonts-75dpi \
-xfonts-base
+uuid-runtime 
 
-pip3 install setuptools --upgrade
-pip3 install wheel
+npm install -g rtlcss 
+
+wget -nv https://downloads.wkhtmltopdf.org/0.12/0.12.5/wkhtmltox_0.12.5-1.xenial_amd64.deb
+dpkg --force-depends -i wkhtmltox_0.12.5-1.xenial_amd64.deb
+apt-get install -y -f --no-install-recommends
+rm -rf wkhtmltox_0.12.5-1.xenial_amd64.deb
+ln -s /usr/local/bin/wkhtmltopdf /usr/bin
+ln -s /usr/local/bin/wkhtmltoimage /usr/bin
+
+pip3 install num2words xlwt
 
 adduser --system --home=/opt/odoo --group odoo
 
@@ -44,24 +48,10 @@ cd /opt
 
 #git config --global http.proxy ${HTTP_PROXY}
 #git config --global https.proxy ${HTTP_PROXY}
-
 git clone https://www.github.com/odoo/odoo --depth 1 --branch 12.0 --single-branch odoo
 pip3 install -r /opt/odoo/doc/requirements.txt
 pip3 install -r /opt/odoo/requirements.txt
 pip3 install odoorpc
-
-npm install -g less less-plugin-clean-css
-
-wget -nv https://downloads.wkhtmltopdf.org/0.12/0.12.5/wkhtmltox_0.12.5-1.xenial_amd64.deb
-dpkg --force-depends -i wkhtmltox_0.12.5-1.xenial_amd64.deb
-
-apt-get install -y -f --no-install-recommends
-rm -rf wkhtmltox_0.12.5-1.xenial_amd64.deb
-
-ln -s /usr/local/bin/wkhtmltopdf /usr/bin
-ln -s /usr/local/bin/wkhtmltoimage /usr/bin
-
-ln -s /usr/bin/nodejs /usr/bin/node
 
 mkdir -p /etc/odoo
 mkdir -p /opt/odoo/extra
