@@ -14,22 +14,26 @@ Docker container for Odoo Server based on [madharjan/docker-base](https://github
   
 ## Odoo Server 12.0 (docker-odoo)
 
-| Variable               | Default                | Example          |
-|------------------------|------------------------|------------------|
-| DISABLE_ODOO           | 0                      | 1 (to disable)   |
-| ODOO_DATABASE_NAME     | odoo                   |                  |
-| ODOO_ADMIN_PASSWORD    |                        |                  |
-| ODOO_ADMIN_EMAIL       |                        |                  |
-| ODOO_COMPANY_NAME      | Acme Pte Ltd           |                  |
-| ODOO_LANG              | en_US                  |                  |
-| ODOO_INSTALL_MODULES   | website                | website,blog     |
-| ODOO_UNINSTALL_MODULES |                        |                  |
-| ODOO_SMTP_HOST         | [ default gateway ip ] |                  |
-| ODOO_SMTP_PORT         | 25                     |                  |
-| POSTGRESQL_HOST        | linked to 'postgresql' | 172.17.0.1       |
-| POSTGRESQL_PORT        | linked to 'postgresql' | 5432             |
-| POSTGRESQL_USER        | linked to 'postgresql' | odoo             |
-| POSTGRESQL_PASS        | linked to 'postgresql' | pass             |
+### Environment
+
+| Variable               | Default                | Example        |
+| ---------------------- | ---------------------- | -------------- |
+| DISABLE_ODOO           | 0                      | 1 (to disable) |
+|                        |                        |                |
+| ODOO_DATABASE_NAME     | odoo                   |                |
+| ODOO_ADMIN_PASSWORD    |                        |                |
+| ODOO_ADMIN_EMAIL       |                        |                |
+| ODOO_COMPANY_NAME      | Acme Pte Ltd           |                |
+| ODOO_LANG              | en_US                  |                |
+| ODOO_INSTALL_MODULES   | website                | website,blog   |
+| ODOO_UNINSTALL_MODULES |                        |                |
+| ODOO_SMTP_HOST         | [ default gateway ip ] |                |
+| ODOO_SMTP_PORT         | 25                     |                |
+|                        |                        |                |
+| POSTGRESQL_HOST        | linked to 'postgresql' | 172.17.0.1     |
+| POSTGRESQL_PORT        | linked to 'postgresql' | 5432           |
+| POSTGRESQL_USER        | linked to 'postgresql' | odoo           |
+| POSTGRESQL_PASS        | linked to 'postgresql' | pass           |
 
 ## Build
 
@@ -140,35 +144,38 @@ WantedBy=multi-user.target
 
 ## Generate Systemd Unit File
 
-| Variable                 | Default                     | Example                                                          |
-|--------------------------|-----------------------------|------------------------------------------------------------------|
-| PORT                     |                             | 8069                                                             |
-| VOLUME_HOME              | /opt/docker                 | /opt/data                                                        |
-| ODOO_DATABASE_NAME       | odoo                        | demo                                                             |
-| ODOO_ADMIN_PASSWORD      |                             | Pa55w0rd                                                         |
-| ODOO_ADMIN_EMAIL         |                             | root@localhost.localdomain                                       |
-| ODOO_COMPANY_NAME        | Acme Pte Ltd                | My Company Pte Ltd                                               |
-| ODOO_INSTALL_MODULES     | website                     | website,blogs                                                    |
-| ODOO_UNINSTALL_MODULES   |                             |                                                                  |
-| ODOO_LANG                | en_US                       | en_UK                                                            |
-| LINK_DATABASE_CONTAINER  |                             | postgresql                                                       |
+| Variable               | Default      | Example                    |
+| ---------------------- | ------------ | -------------------------- |
+| NAME                   | odoo         | 8069                       |
+| VOLUME_HOME            | /opt/docker  | /opt/data                  |
+| PORT                   |              | 8069                       |
+| LINK_CONTAINERS        |              | postgresql                 |
+|                        |              |                            |
+| ODOO_DATABASE_NAME     | odoo         | demo                       |
+| ODOO_ADMIN_PASSWORD    |              | Pa55w0rd                   |
+| ODOO_ADMIN_EMAIL       |              | root@localhost.localdomain |
+| ODOO_COMPANY_NAME      | Acme Pte Ltd | My Company Pte Ltd         |
+| ODOO_INSTALL_MODULES   | website      | website,blogs              |
+| ODOO_UNINSTALL_MODULES |              |                            |
+| ODOO_LANG              | en_US        | en_UK                      |
 
 ```bash
 # generate postgresql.service
 docker run --rm \
-  -e NAME=postgresql \
+  -e NAME=odoo-postgresql \
+  -e POSTGRESQL_USERNAME=odoo \
   -e POSTGRESQL_PASSWORD=odoo \
   madharjan/docker-postgresql:9.5 \
   postgresql-systemd-unit | \
-  sudo tee /etc/systemd/system/postgresql.service
+  sudo tee /etc/systemd/system/odoo-postgresql.service
 
-sudo systemctl enable postgresql
-sudo systemctl start postgresql
+sudo systemctl enable odoo-postgresql
+sudo systemctl start odoo-postgresql
 
 # generate odoo.service
 docker run --rm \
   -e PORT=8069 \
-  -e LINK_DATABASE_CONTAINER=postgresql \
+  -e LINK_CONTAINERS=odoo-postgresql \
   -e ODOO_ADMIN_PASSWORD=Pa55w0rd \
   -e ODOO_ADMIN_EMAIL=root@localhost.localdomain \
   -e ODOO_COMPANY_NAME="Acme Pte Ltd" \

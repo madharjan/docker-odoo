@@ -2,7 +2,8 @@
 
 set -x
 
-./clean.sh
+DIR=$(dirname $0)
+$DIR/clean.sh
 
 sudo mkdir -p /opt/docker/odoo/postgresql/etc/
 sudo mkdir -p /opt/docker/odoo/postgresql/lib/

@@ -1,5 +1,5 @@
 FROM madharjan/docker-base:16.04
-MAINTAINER Madhav Raj Maharjan <madhav.maharjan@gmail.com>
+LABEL maintainer="Madhav Raj Maharjan <madhav.maharjan@gmail.com>"
 
 ARG VCS_REF
 ARG ODOO_VERSION

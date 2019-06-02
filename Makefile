@@ -20,6 +20,7 @@ else
 endif
 
 build:
+	sed -i -e "s/VERSION=.*/VERSION=$(VERSION)/g" bin/odoo-systemd-unit
 	docker build \
 		--build-arg ODOO_VERSION=$(VERSION) \
 		--build-arg VCS_REF=`git rev-parse --short HEAD` \
@@ -50,9 +51,9 @@ run:
 
 	docker run -d \
 		--link odoo-postgresql:postgresql \
+		-e DEBUG=$(DEBUG) \
 		-e ODOO_ADMIN_PASSWORD=Pa55w0rd \
 		-e ODOO_ADMIN_EMAIL=admin@local.host \
-		-e DEBUG=${DEBUG} \
 		-v /tmp/odoo/etc:/etc/odoo \
 		-v /tmp/odoo/addons:/opt/odoo/extra \
 		-v /tmp/odoo/lib:/var/lib/odoo \
@@ -63,14 +64,14 @@ run:
 	docker run -d \
 		--link odoo-postgresql:postgresql \
 		-e DISABLE_ODOO=1 \
-		-e DEBUG=${DEBUG} \
+		-e DEBUG=$(DEBUG) \
 		--name odoo_no_odoo $(NAME):$(VERSION)
 
 	sleep 2
 
 	docker run -d \
 		--link odoo-postgresql_default:postgresql \
-		-e DEBUG=${DEBUG} \
+		-e DEBUG=$(DEBUG) \
 		--name odoo_default $(NAME):$(VERSION)
 
 	sleep 5
